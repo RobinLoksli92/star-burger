@@ -1,3 +1,4 @@
+from urllib import response
 from django.http import JsonResponse
 from django.templatetags.static import static
 import json
@@ -66,8 +67,20 @@ def register_order(request):
 
     product_order = request.data
 
-    if not product_order.get('products') or not isinstance(product_order['products'], list):
-        return Response({'error':'products key are not presented or not list'})
+    if not product_order.get('products') \
+        or not isinstance(product_order['products'], list):
+            return Response({'error':'products key are not presented or not list'})
+
+    
+    if not product_order.get('firstname'):
+        return Response({'error':'The key "firstname" is not specified or not str'})
+    elif not product_order.get('lastname'):
+        return Response({'error':'The key "lastname" is not specified or not str'})
+    elif not product_order.get('phonenubmer'):
+        return Response({'error':'The key "phonenumber" is not specified or not str'}) 
+    elif not product_order.get('address'):
+        return Response({'error':'The key "address" is not specified or not str'})
+
 
     order =Order.objects.create(
         name=product_order['firstname'],
