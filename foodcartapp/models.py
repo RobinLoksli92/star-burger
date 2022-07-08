@@ -1,3 +1,4 @@
+from itertools import product
 from django.db import models
 from django.core.validators import MinValueValidator
 from phonenumber_field.modelfields import PhoneNumberField
@@ -86,6 +87,7 @@ class Product(models.Model):
 
     objects = ProductQuerySet.as_manager()
 
+
     class Meta:
         verbose_name = 'товар'
         verbose_name_plural = 'товары'
@@ -129,4 +131,30 @@ class Order(models.Model):
     lastname = models.CharField('Фамилия', max_length=50)
     phone_number = PhoneNumberField('Номер телефона', db_index=True)
     address = models.CharField('Адрес', max_length=100)
+
+    class Meta:
+        verbose_name = 'Заказ'
+        verbose_name_plural = 'Заказы'
+
+    def __str__(self):
+        return f'{self.name} {self.lastname} {self.id}'
+
+
+class OrderingProduct(models.Model):
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        verbose_name='Товар',
+        related_name='products'
+        )
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.CASCADE,
+        verbose_name='Заказанные товары',
+        related_name='ordering_products'
+        )
+    quantity = models.IntegerField('Количество')
     
+    def __str__(self):
+        return f'{self.product}'
+
