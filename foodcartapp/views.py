@@ -4,11 +4,24 @@ from django.templatetags.static import static
 import json
 
 from rest_framework.decorators import api_view
-from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.serializers import ModelSerializer, ListField
 
 from .models import Product, Order, OrderingProduct
 
+
+class OrderingProductSerializer(ModelSerializer):
+    class Meta:
+        model = OrderingProduct
+        fields = ['product']
+
+
+class OrderSerializer(ModelSerializer):
+    products = ListField(child=OrderingProductSerializer(), allow_empty=False)
+    class Meta:
+        model = Order
+        fields = ['products', 'firstname', 'lastname', 'phonenumber', 'address']
+    
 
 def banners_list_api(request):
     # FIXME move data to db?
@@ -64,32 +77,21 @@ def product_list_api(request):
 
 @api_view(['POST'])
 def register_order(request):
-
     product_order = request.data
 
-    if not product_order.get('products') \
-        or not isinstance(product_order['products'], list):
-            return Response({'error':'products key are not presented or not list'})
+    serializer = OrderSerializer(data=product_order)
+    serializer.is_valid(raise_exception=True)
 
+    print(repr(OrderSerializer()))
     
-    if not product_order.get('firstname'):
-        return Response({'error':'The key "firstname" is not specified or not str'})
-    elif not product_order.get('lastname'):
-        return Response({'error':'The key "lastname" is not specified or not str'})
-    elif not product_order.get('phonenubmer'):
-        return Response({'error':'The key "phonenumber" is not specified or not str'}) 
-    elif not product_order.get('address'):
-        return Response({'error':'The key "address" is not specified or not str'})
-
-
-    order =Order.objects.create(
-        name=product_order['firstname'],
-        lastname=product_order['lastname'],
-        phone_number=product_order['phonenumber'],
-        address=product_order['address']
+    order = Order.objects.create(
+        name=serializer.validated_data['firstname'],
+        lastname=serializer.validated_data['lastname'],
+        phone_number=serializer.validated_data['phonenumber'],
+        address=serializer.validated_data['address']
         )
 
-    for product in product_order['products']:
+    for product in serializer.validated_data['products']:
         ordering_product = Product.objects.get(id=product['product'])
         OrderingProduct.objects.create(
             order=order,
