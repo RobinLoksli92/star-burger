@@ -96,4 +96,4 @@ def register_order(request):
             quantity=product['quantity']
         )
     
-    return Response(serializer.data)
+    return JsonResponse({})
