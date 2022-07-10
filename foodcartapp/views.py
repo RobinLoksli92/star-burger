@@ -17,10 +17,10 @@ class OrderingProductSerializer(ModelSerializer):
 
 
 class OrderSerializer(ModelSerializer):
-    products = ListField(child=OrderingProductSerializer(), allow_empty=False)
+    products = ListField(child=OrderingProductSerializer(), allow_empty=False, write_only=True)
     class Meta:
         model = Order
-        fields = ['products', 'firstname', 'lastname', 'phonenumber', 'address']
+        fields = ['id', 'products', 'firstname', 'lastname', 'phonenumber', 'address']
     
 
 def banners_list_api(request):
@@ -77,21 +77,18 @@ def product_list_api(request):
 
 @api_view(['POST'])
 def register_order(request):
-    product_order = request.data
-
-    serializer = OrderSerializer(data=product_order)
+    serializer = OrderSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-
-    print(repr(OrderSerializer()))
+    product_order = serializer.validated_data
     
     order = Order.objects.create(
-        name=serializer.validated_data['firstname'],
-        lastname=serializer.validated_data['lastname'],
-        phone_number=serializer.validated_data['phonenumber'],
-        address=serializer.validated_data['address']
+        firstname=product_order['firstname'],
+        lastname=product_order['lastname'],
+        phonenumber=product_order['phonenumber'],
+        address=product_order['address']
         )
 
-    for product in serializer.validated_data['products']:
+    for product in request.data['products']:
         ordering_product = Product.objects.get(id=product['product'])
         OrderingProduct.objects.create(
             order=order,
@@ -99,4 +96,4 @@ def register_order(request):
             quantity=product['quantity']
         )
     
-    return JsonResponse({})
+    return Response(serializer.data)
