@@ -2,7 +2,7 @@ from math import prod
 from urllib import response
 from django.http import JsonResponse
 from django.templatetags.static import static
-import json
+from django.db import transaction
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -77,6 +77,7 @@ def product_list_api(request):
 
 
 @api_view(['POST'])
+@transaction.atomic
 def register_order(request):
     serializer = OrderSerializer(data=request.data)
     
@@ -107,6 +108,5 @@ def register_order(request):
         for product in product_order['products']
     ]
     OrderingProduct.objects.bulk_create(ordering_products)
-
     
     return JsonResponse({})
