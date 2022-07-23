@@ -163,6 +163,18 @@ class Order(models.Model):
     called_at = models.DateTimeField('Время звонка', blank=True, null=True)
     delivered_at = models.DateTimeField('Время доставки', blank=True, null=True)
 
+    PAYMENT_TYPE_CHOICES = [
+        ('cash', 'Наличные'),
+        ('online', 'Оплата онлайн')
+    ]
+    payment_type = models.CharField(
+        'Способ оплаты',
+        max_length=10,
+        choices=PAYMENT_TYPE_CHOICES,
+        blank=True,
+        db_index=True
+        )
+
     class Meta:
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
