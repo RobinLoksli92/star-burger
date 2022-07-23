@@ -150,11 +150,14 @@ class Order(models.Model):
         ('ready', 'Выполнен')
     ]
     status = models.CharField(
+        'Статус',
         max_length=10,
         default='new',
         choices=STATUS_CHOICES,
         db_index=True
         )
+
+    comment = models.TextField('Комментарий', max_length=200, blank=True)
 
     class Meta:
         verbose_name = 'Заказ'
