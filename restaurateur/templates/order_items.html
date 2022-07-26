@@ -29,19 +29,23 @@
       {% if not order.status == 'ready' %}
         <tr>
           <td>{{ order.id }}</td>
-          <td>{{ order.geT_status_display }}</td>
+          <td>{{ order.get_status_display }}</td>
           <td>{{ order.get_payment_type_display }}</td>
           <td>{{ order.order_price }}</td>
           <td>{{ order.firstname }} {{ order.lastname }}</td>
           <td>{{ order.phonenumber }}</td>
           <td>{{ order.address }}</td>
-          <td>{{ order.comments }}</td>
+          <td>{{ order.comment }}</td>
           <td>
             <details>
             <summary>Рестораны</summary>
+            {% if order.status == 'new' %}
             {% for restaurant in order.relevant_restaurants %}
             {{restaurant}}
             {% endfor %}
+            {% else %}
+            {{order.restaurant}}
+            {% endif %}
             </details>
           </td>
           <td><a href="{% url 'admin:foodcartapp_order_change' object_id=order.id %}?next={{ request.path|urlencode }}">Редактировать</a></td>

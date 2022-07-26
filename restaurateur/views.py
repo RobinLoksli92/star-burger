@@ -97,9 +97,9 @@ def view_restaurants(request):
 
 @user_passes_test(is_manager, login_url='restaurateur:login')
 def view_orders(request):
-    orders = Order.objects.all().calculate_order_price()
+    new_orders = Order.objects.all().calculate_order_price()
     
-    for order in orders:
+    for order in new_orders:
         relevant_restaurants = []
         ordering_products = set()
         for product in order.ordering_products.all():
@@ -114,5 +114,5 @@ def view_orders(request):
         order.relevant_restaurants = relevant_restaurants
 
     return render(request, template_name='order_items.html', context={
-        "orders": orders,
+        "orders": new_orders,
     })
