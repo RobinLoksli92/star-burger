@@ -175,6 +175,15 @@ class Order(models.Model):
         db_index=True
         )
 
+    restaurant = models.ForeignKey(
+        Restaurant,
+        on_delete=models.CASCADE,
+        verbose_name='Ресторан, готовящий заказ',
+        related_name='relevant_restaurants',
+        blank=True,
+        null=True
+    )
+
     class Meta:
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'

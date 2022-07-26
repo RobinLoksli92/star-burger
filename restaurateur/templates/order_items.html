@@ -21,6 +21,7 @@
       <th>Телефон</th>
       <th>Адрес доставки</th>
       <th>Комментарий</th>
+      <th>Рестораны</th>
       <th>Ссылка на админку</th>
     </tr>
 
@@ -35,6 +36,14 @@
           <td>{{ order.phonenumber }}</td>
           <td>{{ order.address }}</td>
           <td>{{ order.comments }}</td>
+          <td>
+            <details>
+            <summary>Рестораны</summary>
+            {% for restaurant in order.relevant_restaurants %}
+            {{restaurant}}
+            {% endfor %}
+            </details>
+          </td>
           <td><a href="{% url 'admin:foodcartapp_order_change' object_id=order.id %}?next={{ request.path|urlencode }}">Редактировать</a></td>
         </tr>
       {% endif %}
