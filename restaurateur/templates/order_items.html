@@ -30,7 +30,13 @@
         <tr>
           <td>{{ order.id }}</td>
           <td>{{ order.get_status_display }}</td>
-          <td>{{ order.get_payment_type_display }}</td>
+          <td>
+            {% if order.payment_type %}
+            {{ order.get_payment_type_display }}
+            {% else %}
+            Не выбран
+            {% endif %}
+          </td>
           <td>{{ order.order_price }}</td>
           <td>{{ order.firstname }} {{ order.lastname }}</td>
           <td>{{ order.phonenumber }}</td>
@@ -41,7 +47,7 @@
             <summary>Рестораны</summary>
             {% if order.status == 'new' %}
             {% for restaurant in order.relevant_restaurants %}
-            {{restaurant}}
+            {{restaurant.0}} - {{restaurant.0.distance}}, км
             {% endfor %}
             {% else %}
             {{order.restaurant}}
