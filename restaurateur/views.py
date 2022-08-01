@@ -116,11 +116,22 @@ def view_orders(request):
             for item in restaurant.menu_items.all():
                 restaurants_items.add(item.product)
             if ordering_products <= restaurants_items:
-                restaurant_coords = restaurant.geo_location.lat, restaurant.geo_location.long
-                restaurant.distance = distance.distance(restaurant_coords, customer_coords).km
-                relevant_restaurants.append((restaurant, restaurant.distance))
+                restaurant_coords = (
+                    restaurant.geo_location.lat,
+                    restaurant.geo_location.long
+                    )
+                restaurant.distance = distance.distance(
+                    restaurant_coords,
+                     customer_coords).km
+                relevant_restaurants.append(
+                    (restaurant,
+                    restaurant.distance)
+                )
 
-        order.relevant_restaurants = sorted(relevant_restaurants, key=itemgetter(1))
+        order.relevant_restaurants = sorted(
+            relevant_restaurants,
+            key=itemgetter(1)
+            )
 
     return render(request, template_name='order_items.html', context={
         "orders": new_orders,
