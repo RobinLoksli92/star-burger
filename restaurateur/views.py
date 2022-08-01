@@ -1,5 +1,6 @@
 from operator import itemgetter
 from django import forms
+from django.conf import settings
 from django.shortcuts import redirect, render
 from django.views import View
 from django.urls import reverse_lazy
@@ -11,7 +12,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import views as auth_views
 
 
-from foodcartapp.models import OrderingProduct, Product, Restaurant, Order, RestaurantMenuItem
+from foodcartapp.models import  Product, Restaurant, Order, RestaurantMenuItem
+
 
 
 class Login(forms.Form):
@@ -98,32 +100,13 @@ def view_restaurants(request):
     })
 
 
-def fetch_coordinates(apikey, address):
-    base_url = "https://geocode-maps.yandex.ru/1.x"
-    response = requests.get(base_url, params={
-        "geocode": address,
-        "apikey": apikey,
-        "format": "json",
-    })
-    response.raise_for_status()
-    found_places = response.json()['response']['GeoObjectCollection']['featureMember']
-
-    if not found_places:
-        return None
-
-    most_relevant = found_places[0]
-    lon, lat = most_relevant['GeoObject']['Point']['pos'].split(" ")
-    return lon, lat
-
-
 @user_passes_test(is_manager, login_url='restaurateur:login')
 def view_orders(request):
     new_orders = Order.objects.all().calculate_order_price()
     
     for order in new_orders:
-        client_coords = fetch_coordinates("b9aee6c8-18ae-4374-b889-653fddb6b379", order.address)
+        customer_coords = order.geo_location.lat, order.geo_location.long
         relevant_restaurants = []
-        restaurants_distances = []
         ordering_products = set()
         for product in order.ordering_products.all():
             ordering_products.add(product.product)
@@ -133,8 +116,8 @@ def view_orders(request):
             for item in restaurant.menu_items.all():
                 restaurants_items.add(item.product)
             if ordering_products <= restaurants_items:
-                restaurant_coords = fetch_coordinates("b9aee6c8-18ae-4374-b889-653fddb6b379", restaurant.address)
-                restaurant.distance = distance.distance(restaurant_coords, client_coords).km
+                restaurant_coords = restaurant.geo_location.lat, restaurant.geo_location.long
+                restaurant.distance = distance.distance(restaurant_coords, customer_coords).km
                 relevant_restaurants.append((restaurant, restaurant.distance))
 
         order.relevant_restaurants = sorted(relevant_restaurants, key=itemgetter(1))

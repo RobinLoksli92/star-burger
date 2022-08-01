@@ -10,6 +10,7 @@ from .models import ProductCategory
 from .models import Restaurant
 from .models import RestaurantMenuItem
 from .models import Order, OrderingProduct
+from geo_location.models import GeoLocation
 
 
 class RestaurantMenuItemInline(admin.TabularInline):
@@ -136,3 +137,7 @@ class OrderAdmin(admin.ModelAdmin):
                 return HttpResponseRedirect(request.GET['next'])
         else:
             return res
+
+@admin.register(GeoLocation)
+class GeoLocationAdmin(admin.ModelAdmin):
+    pass

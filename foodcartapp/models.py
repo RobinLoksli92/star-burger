@@ -4,6 +4,8 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django.db.models import F, Sum
 from django.utils import timezone
 
+from geo_location.models import GeoLocation
+
 
 class Restaurant(models.Model):
     name = models.CharField(
@@ -19,6 +21,14 @@ class Restaurant(models.Model):
         'контактный телефон',
         max_length=50,
         blank=True,
+    )
+    geo_location = models.ForeignKey(
+        GeoLocation,
+        related_name='restaurants_locations',
+        verbose_name='Координаты ресторана',
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True
     )
 
     class Meta:
@@ -180,6 +190,15 @@ class Order(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Ресторан, готовящий заказ',
         related_name='relevant_restaurants',
+        blank=True,
+        null=True
+    )
+
+    geo_location = models.ForeignKey(
+        GeoLocation,
+        related_name='customers_locations',
+        verbose_name='Координаты заказчика',
+        on_delete=models.CASCADE,
         blank=True,
         null=True
     )
