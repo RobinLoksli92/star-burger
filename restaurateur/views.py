@@ -108,7 +108,8 @@ def view_orders(request):
         customer_coords = order.geo_location.lat, order.geo_location.long
         relevant_restaurants = []
         ordering_products = set()
-        for product in order.ordering_products.all():
+        for product in order.items.all():
+            print(product.product)
             ordering_products.add(product.product)
         
         for restaurant in Restaurant.objects.prefetch_related('menu_items'):

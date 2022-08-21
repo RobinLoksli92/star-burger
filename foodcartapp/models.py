@@ -141,7 +141,7 @@ class RestaurantMenuItem(models.Model):
 class OrderQuerySet(models.QuerySet):
     def calculate_order_price(self):
         order_price = self.annotate(
-            order_price = Sum(F('ordering_products__quantity')*F('ordering_products__price'))
+            order_price = Sum(F('items__quantity')*F('items__price'))
             )
         return order_price
 
@@ -189,7 +189,7 @@ class Order(models.Model):
         Restaurant,
         on_delete=models.CASCADE,
         verbose_name='Ресторан, готовящий заказ',
-        related_name='relevant_restaurants',
+        related_name='orders',
         blank=True,
         null=True
     )
@@ -216,13 +216,13 @@ class OrderingProduct(models.Model):
         Product,
         on_delete=models.CASCADE,
         verbose_name='Товар',
-        related_name='ordering_products'
+        related_name='product_items'
         )
     order = models.ForeignKey(
         Order,
         on_delete=models.CASCADE,
         verbose_name='Заказанные товары',
-        related_name='ordering_products'
+        related_name='items'
         )
     quantity = models.IntegerField(
         'Количество',
