@@ -224,13 +224,16 @@ class OrderingProduct(models.Model):
         verbose_name='Заказанные товары',
         related_name='ordering_products'
         )
-    quantity = models.IntegerField('Количество')
+    quantity = models.IntegerField(
+        'Количество',
+         validators=[MinValueValidator(1)]
+         )
+
     price = models.DecimalField(
         'цена',
         max_digits=8,
         decimal_places=2,
-        validators=[MinValueValidator(0)],
-        default=0
+        validators=[MinValueValidator(0)]
     )
     
     def __str__(self):
