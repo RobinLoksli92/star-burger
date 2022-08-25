@@ -168,22 +168,22 @@ class Order(models.Model):
         db_index=True
         )
 
-    comment = models.TextField('Комментарий', max_length=200, blank=True)
+    comment = models.TextField('Комментарий', blank=True)
     registrated_at = models.DateTimeField('Создан в', default=timezone.now)
     called_at = models.DateTimeField('Время звонка', blank=True, null=True)
     delivered_at = models.DateTimeField('Время доставки', blank=True, null=True)
 
-    PAYMENT_TYPE_CHOICES = [
-        ('cash', 'Наличные'),
-        ('online', 'Оплата онлайн')
-    ]
     payment_type = models.CharField(
         'Способ оплаты',
         max_length=10,
-        choices=PAYMENT_TYPE_CHOICES,
+        choices=[
+            ('cash', 'Наличные'),
+            ('online', 'Оплата онлайн')
+        ],
         blank=True,
         db_index=True
         )
+
 
     restaurant = models.ForeignKey(
         Restaurant,
