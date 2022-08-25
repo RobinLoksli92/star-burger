@@ -26,14 +26,15 @@ def add_restaurants_coords(apps, scheme_editor):
     GeoLocation = apps.get_model('geo_location', 'GeoLocation')
     Restaurant = apps.get_model('foodcartapp', 'Restaurant')
     for restaurant in Restaurant.objects.all():
-        restaurant_coords = fetch_coordinates(settings.YANDEX_APIKEY, restaurant.address)
-        restaurant_geo_location = GeoLocation.objects.create(
+        
+        restaurant_geo_location, is_created = GeoLocation.objects.get_or_create(
             address=restaurant.address,
-            lat=restaurant_coords[1],
-            long=restaurant_coords[0]
         )
-        restaurant.geo_location = restaurant_geo_location
-        restaurant.save()
+        if is_created:
+            restaurant_coords = fetch_coordinates(settings.YANDEX_APIKEY, restaurant.address)
+            restaurant_geo_location.long, restaurant_geo_location.lat = restaurant_coords
+            restaurant.geo_location = restaurant_geo_location
+            restaurant.save()
 
 class Migration(migrations.Migration):
 

@@ -102,15 +102,16 @@ def register_order(request):
     
     serializer.is_valid(raise_exception=True)
     product_order = serializer.validated_data
-    
-    customer_coords = fetch_coordinates(settings.YANDEX_APIKEY, product_order['address'])
 
-
-    geo_location = GeoLocation.objects.create(
+    geo_location, is_created = GeoLocation.objects.get_or_create(
         address=product_order['address'],
-        lat=customer_coords[1],
-        long=customer_coords[0]
     )
+
+    if is_created:
+        customer_coords = fetch_coordinates(settings.YANDEX_APIKEY, product_order['address'])
+        if customer_coords:
+            geo_location.long, geo_location.lat = customer_coords
+            geo_location.save()
 
     order = Order.objects.create(
         firstname=product_order['firstname'],
@@ -124,7 +125,9 @@ def register_order(request):
         OrderingProduct(
             product = product['product'],
             order = order,
-            quantity = product['quantity'])
+            quantity = product['quantity'],
+            price=Product.objects.get(name=product['product']).price
+            )
         for product in product_order['products']
     ]
     OrderingProduct.objects.bulk_create(ordering_products)

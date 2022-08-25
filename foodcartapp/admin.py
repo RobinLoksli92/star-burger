@@ -120,16 +120,6 @@ class OrderAdmin(admin.ModelAdmin):
         OrderingProductInline
     ]
 
-    def save_formset(self, request, form, formset, change):
-        ordering_products = formset.save(commit=False)
-        for obj in formset.deleted_objects:
-            obj.delete()
-
-        for ordering_product in ordering_products:
-            product = Product.objects.get(id=ordering_product.product.id)
-            ordering_product.price = product.price
-            ordering_product.save()
-
     def response_post_save_change(self, request, obj):
         res = super().response_post_save_change(request, obj)
         if "next" in request.GET:
