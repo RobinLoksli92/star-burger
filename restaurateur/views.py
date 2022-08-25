@@ -120,7 +120,7 @@ def view_orders(request):
                 restaurant_coords = (
                     restaurant.geo_location.lat,
                     restaurant.geo_location.long
-                    )
+                )
                 restaurant.distance = distance.distance(
                     restaurant_coords,
                      customer_coords).km
@@ -132,7 +132,7 @@ def view_orders(request):
         order.relevant_restaurants = sorted(
             relevant_restaurants,
             key=itemgetter(1)
-            )
+        )
 
     return render(request, template_name='order_items.html', context={
         "orders": new_orders,

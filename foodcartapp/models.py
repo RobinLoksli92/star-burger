@@ -142,7 +142,7 @@ class OrderQuerySet(models.QuerySet):
     def calculate_order_price(self):
         order_price = self.annotate(
             order_price = Sum(F('items__quantity')*F('items__price'))
-            )
+        )
         return order_price
 
 
@@ -166,7 +166,7 @@ class Order(models.Model):
         default='new',
         choices=STATUS_CHOICES,
         db_index=True
-        )
+    )
 
     comment = models.TextField('Комментарий', blank=True)
     registrated_at = models.DateTimeField('Создан в', default=timezone.now)
@@ -182,7 +182,7 @@ class Order(models.Model):
         ],
         blank=True,
         db_index=True
-        )
+    )
 
 
     restaurant = models.ForeignKey(
@@ -217,17 +217,17 @@ class OrderingProduct(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Товар',
         related_name='product_items'
-        )
+    )
     order = models.ForeignKey(
         Order,
         on_delete=models.CASCADE,
         verbose_name='Заказанные товары',
         related_name='items'
-        )
+    )
     quantity = models.IntegerField(
         'Количество',
          validators=[MinValueValidator(1)]
-         )
+    )
 
     price = models.DecimalField(
         'цена',

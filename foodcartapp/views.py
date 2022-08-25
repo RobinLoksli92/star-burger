@@ -119,7 +119,7 @@ def register_order(request):
         phonenumber=product_order['phonenumber'],
         address=product_order['address'],
         geo_location=geo_location
-        )
+    )
 
     ordering_products = [
         OrderingProduct(
@@ -127,7 +127,7 @@ def register_order(request):
             order = order,
             quantity = product['quantity'],
             price=Product.objects.get(name=product['product']).price
-            )
+        )
         for product in product_order['products']
     ]
     OrderingProduct.objects.bulk_create(ordering_products)
