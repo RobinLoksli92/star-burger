@@ -25,7 +25,8 @@ def fetch_coordinates(apikey, address):
 def add_restaurants_coords(apps, scheme_editor):
     GeoLocation = apps.get_model('geo_location', 'GeoLocation')
     Restaurant = apps.get_model('foodcartapp', 'Restaurant')
-    for restaurant in Restaurant.objects.all():
+    restaurants = Restaurant.objects.all()
+    for restaurant in restaurants.iterator():
         
         restaurant_geo_location, is_created = GeoLocation.objects.get_or_create(
             address=restaurant.address,
@@ -35,6 +36,7 @@ def add_restaurants_coords(apps, scheme_editor):
             restaurant_geo_location.long, restaurant_geo_location.lat = restaurant_coords
             restaurant.geo_location = restaurant_geo_location
             restaurant.save()
+
 
 class Migration(migrations.Migration):
 
