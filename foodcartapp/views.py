@@ -10,6 +10,7 @@ from rest_framework.serializers import ModelSerializer, ListField
 from geo_location.models import GeoLocation
 
 from .models import Product, Order, OrderingProduct
+from geo_location.views import fetch_coordinates
 
 
 class OrderingProductSerializer(ModelSerializer):
@@ -75,24 +76,6 @@ def product_list_api(request):
         'ensure_ascii': False,
         'indent': 4,
     })
-
-
-def fetch_coordinates(apikey, address):
-    base_url = "https://geocode-maps.yandex.ru/1.x"
-    response = requests.get(base_url, params={
-        "geocode": address,
-        "apikey": apikey,
-        "format": "json",
-    })
-    response.raise_for_status()
-    found_places = response.json()['response']['GeoObjectCollection']['featureMember']
-
-    if not found_places:
-        return None
-
-    most_relevant = found_places[0]
-    lon, lat = most_relevant['GeoObject']['Point']['pos'].split(" ")
-    return lon, lat
 
 
 @api_view(['POST'])
