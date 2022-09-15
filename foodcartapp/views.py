@@ -132,4 +132,4 @@ def register_order(request):
     ]
     OrderingProduct.objects.bulk_create(ordering_products)
     
-    return JsonResponse({})
+    return JsonResponse(serializer.data)
