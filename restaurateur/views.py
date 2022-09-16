@@ -99,7 +99,7 @@ def view_restaurants(request):
 
 @user_passes_test(is_manager, login_url='restaurateur:login')
 def view_orders(request):
-    new_orders = Order.objects.all().calculate_order_price()
+    new_orders = Order.objects.all().calculate_orders_price()
 
     for order in new_orders:
         customer_coords = order.geo_location.lat, order.geo_location.long
