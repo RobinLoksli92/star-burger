@@ -1,4 +1,3 @@
-import requests
 from django.http import JsonResponse
 from django.templatetags.static import static
 from django.conf import settings
@@ -20,11 +19,20 @@ class OrderingProductSerializer(ModelSerializer):
 
 
 class OrderSerializer(ModelSerializer):
-    products = ListField(child=OrderingProductSerializer(), allow_empty=False, write_only=True)
+    products = ListField(
+        child=OrderingProductSerializer(),
+        allow_empty=False,
+        write_only=True
+    )
+
     class Meta:
         model = Order
-        fields = ['id', 'products', 'firstname', 'lastname', 'phonenumber', 'address']
-    
+        fields = [
+            'id', 'products',
+            'firstname', 'lastname',
+            'phonenumber', 'address'
+        ]
+
 
 def banners_list_api(request):
     # FIXME move data to db?
@@ -82,7 +90,7 @@ def product_list_api(request):
 @transaction.atomic
 def register_order(request):
     serializer = OrderSerializer(data=request.data)
-    
+
     serializer.is_valid(raise_exception=True)
     product_order = serializer.validated_data
 
@@ -91,7 +99,10 @@ def register_order(request):
     )
 
     if is_created:
-        customer_coords = fetch_coordinates(settings.YANDEX_APIKEY, product_order['address'])
+        customer_coords = fetch_coordinates(
+            settings.YANDEX_APIKEY,
+            product_order['address']
+        )
         if customer_coords:
             geo_location.long, geo_location.lat = customer_coords
             geo_location.save()
@@ -106,13 +117,13 @@ def register_order(request):
 
     ordering_products = [
         OrderingProduct(
-            product = product['product'],
-            order = order,
-            quantity = product['quantity'],
+            product=product['product'],
+            order=order,
+            quantity=product['quantity'],
             price=Product.objects.get(name=product['product']).price
         )
         for product in product_order['products']
     ]
     OrderingProduct.objects.bulk_create(ordering_products)
-    
+
     return Response(serializer.data)

@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.shortcuts import reverse
 from django.templatetags.static import static
 from django.utils.html import format_html
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.utils.http import url_has_allowed_host_and_scheme
 
 from .models import Product
@@ -54,8 +54,6 @@ class ProductAdmin(admin.ModelAdmin):
         'category',
     ]
     search_fields = [
-        # FIXME SQLite can not convert letter case for cyrillic words properly, so search will be buggy.
-        # Migration to PostgreSQL is necessary
         'name',
         'category__name',
     ]
@@ -110,12 +108,17 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 @admin.register(ProductCategory)
-class ProductAdmin(admin.ModelAdmin):
+class ProductCategoryAdmin(admin.ModelAdmin):
     pass
+
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'firstname', 'lastname', 'phonenumber', 'address', 'restaurant')
+    list_display = (
+        'id', 'firstname',
+        'lastname', 'phonenumber',
+        'address', 'confirmed_restaurant'
+    )
     inlines = [
         OrderingProductInline
     ]
@@ -127,6 +130,7 @@ class OrderAdmin(admin.ModelAdmin):
                 return HttpResponseRedirect(request.GET['next'])
         else:
             return res
+
 
 @admin.register(GeoLocation)
 class GeoLocationAdmin(admin.ModelAdmin):

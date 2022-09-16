@@ -1,19 +1,16 @@
 from operator import itemgetter
 from django import forms
-from django.conf import settings
 from django.shortcuts import redirect, render
 from django.views import View
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import user_passes_test
 from geopy import distance
-import requests
 
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import views as auth_views
 
 
-from foodcartapp.models import  Product, Restaurant, Order, RestaurantMenuItem
-
+from foodcartapp.models import Product, Restaurant, Order
 
 
 class Login(forms.Form):
@@ -103,14 +100,14 @@ def view_restaurants(request):
 @user_passes_test(is_manager, login_url='restaurateur:login')
 def view_orders(request):
     new_orders = Order.objects.all().calculate_order_price()
-    
+
     for order in new_orders:
         customer_coords = order.geo_location.lat, order.geo_location.long
         relevant_restaurants = []
         ordering_products = set()
         for product in order.items.all():
             ordering_products.add(product.product)
-        
+
         for restaurant in Restaurant.objects.prefetch_related('menu_items'):
             restaurants_items = set()
             for item in restaurant.menu_items.all():
@@ -122,10 +119,9 @@ def view_orders(request):
                 )
                 restaurant.distance = distance.distance(
                     restaurant_coords,
-                     customer_coords).km
+                    customer_coords).km
                 relevant_restaurants.append(
-                    (restaurant,
-                    restaurant.distance)
+                    (restaurant, restaurant.distance)
                 )
 
         order.relevant_restaurants = sorted(

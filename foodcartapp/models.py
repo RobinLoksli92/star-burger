@@ -98,7 +98,6 @@ class Product(models.Model):
 
     objects = ProductQuerySet.as_manager()
 
-
     class Meta:
         verbose_name = 'товар'
         verbose_name_plural = 'товары'
@@ -137,11 +136,10 @@ class RestaurantMenuItem(models.Model):
         return f"{self.restaurant.name} - {self.product.name}"
 
 
-
 class OrderQuerySet(models.QuerySet):
     def calculate_order_price(self):
         order_price = self.annotate(
-            order_price = Sum(F('items__quantity')*F('items__price'))
+            order_price=Sum(F('items__quantity')*F('items__price'))
         )
         return order_price
 
@@ -156,7 +154,7 @@ class Order(models.Model):
 
     STATUS_CHOICES = [
         ('new', 'Необработанный'),
-        ('preparing','Готовится'),
+        ('preparing', 'Готовится'),
         ('delivering', 'В доставке'),
         ('ready', 'Выполнен')
     ]
@@ -171,7 +169,11 @@ class Order(models.Model):
     comment = models.TextField('Комментарий', blank=True)
     registrated_at = models.DateTimeField('Создан в', default=timezone.now)
     called_at = models.DateTimeField('Время звонка', blank=True, null=True)
-    delivered_at = models.DateTimeField('Время доставки', blank=True, null=True)
+    delivered_at = models.DateTimeField(
+        'Время доставки',
+        blank=True,
+        null=True
+    )
 
     payment_type = models.CharField(
         'Способ оплаты',
@@ -184,8 +186,7 @@ class Order(models.Model):
         db_index=True
     )
 
-
-    restaurant = models.ForeignKey(
+    confirmed_restaurant = models.ForeignKey(
         Restaurant,
         on_delete=models.CASCADE,
         verbose_name='Ресторан, готовящий заказ',
@@ -226,7 +227,7 @@ class OrderingProduct(models.Model):
     )
     quantity = models.IntegerField(
         'Количество',
-         validators=[MinValueValidator(1)]
+        validators=[MinValueValidator(1)]
     )
 
     price = models.DecimalField(
@@ -235,7 +236,6 @@ class OrderingProduct(models.Model):
         decimal_places=2,
         validators=[MinValueValidator(0)]
     )
-    
+
     def __str__(self):
         return f'{self.product}'
-
