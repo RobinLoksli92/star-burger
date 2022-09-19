@@ -105,14 +105,13 @@ def view_orders(request):
         customer_coords = order.geo_location.lat, order.geo_location.long
         relevant_restaurants = []
         ordering_products = set()
-        for product in order.items.all():
-            ordering_products.add(product.product)
+        ordering_products = {product.product for product in order.items.all()}
 
         for restaurant in Restaurant.objects.prefetch_related('menu_items'):
             restaurants_items = set()
-            for item in restaurant.menu_items.all():
-                restaurants_items.add(item.product)
-            if ordering_products <= restaurants_items:
+            restaurants_items = {item.product for item in restaurant.menu_items.all()}
+
+            if ordering_products.issubset(restaurants_items):
                 restaurant_coords = (
                     restaurant.geo_location.lat,
                     restaurant.geo_location.long
