@@ -156,8 +156,6 @@ class Order(models.Model):
     phonenumber = PhoneNumberField('Номер телефона', db_index=True)
     address = models.CharField('Адрес', max_length=100)
 
-    objects = OrderQuerySet.as_manager()
-
     status = models.CharField(
         'Статус',
         max_length=10,
@@ -203,6 +201,8 @@ class Order(models.Model):
         blank=True,
         null=True
     )
+
+    objects = OrderQuerySet.as_manager()
 
     class Meta:
         verbose_name = 'Заказ'
