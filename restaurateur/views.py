@@ -107,7 +107,6 @@ def view_orders(request):
         restaurant_items = {item.product for item in restaurant.menu_items.all()}
         restaurants_items[restaurant] = restaurant_items
     
-    
     for order in new_orders:
         customer_coords = order.geo_location.lat, order.geo_location.long
         relevant_restaurants = []
