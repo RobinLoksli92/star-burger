@@ -217,7 +217,7 @@ class OrderingProduct(models.Model):
         Product,
         on_delete=models.CASCADE,
         verbose_name='Товар',
-        related_name='product_items'
+        related_name='ordering_products'
     )
     order = models.ForeignKey(
         Order,

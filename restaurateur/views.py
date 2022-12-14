@@ -101,17 +101,23 @@ def view_restaurants(request):
 def view_orders(request):
     new_orders = Order.objects.filter(status='new').calculate_orders_price()
 
+    restaurants_items = {}
+    for restaurant in Restaurant.objects.prefetch_related('menu_items'):
+        restaurant_items = set()
+        restaurant_items = {item.product for item in restaurant.menu_items.all()}
+        restaurants_items[restaurant] = restaurant_items
+    
+    
     for order in new_orders:
         customer_coords = order.geo_location.lat, order.geo_location.long
         relevant_restaurants = []
         ordering_products = set()
         ordering_products = {product.product for product in order.items.all()}
+        
+        for restaurant, restaurant_items in restaurants_items.items():
 
-        for restaurant in Restaurant.objects.prefetch_related('menu_items'):
-            restaurants_items = set()
-            restaurants_items = {item.product for item in restaurant.menu_items.all()}
-
-            if ordering_products.issubset(restaurants_items):
+            if ordering_products.issubset(restaurant_items):
+                
                 restaurant_coords = (
                     restaurant.geo_location.lat,
                     restaurant.geo_location.long
@@ -119,9 +125,10 @@ def view_orders(request):
                 restaurant.distance = distance.distance(
                     restaurant_coords,
                     customer_coords).km
+                
                 relevant_restaurants.append(
                     (restaurant, restaurant.distance)
-                )
+                )   
 
         order.relevant_restaurants = sorted(
             relevant_restaurants,

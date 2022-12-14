@@ -46,11 +46,11 @@
             <details>
             <summary>Рестораны</summary>
             {% if order.status == 'new' %}
-            {% for restaurant in order.relevant_restaurants %}
-            {{restaurant.0}} - {{restaurant.0.distance}}, км
-            {% endfor %}
+              {% for restaurant in order.relevant_restaurants %}
+                {{restaurant.0}} - {{restaurant.1}}, км
+              {% endfor %}
             {% else %}
-            {{order.restaurant}}
+                {{order.restaurant}}
             {% endif %}
             </details>
           </td>
