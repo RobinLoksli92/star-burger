@@ -15,7 +15,7 @@ YANDEX_APIKEY = env('YANDEX_APIKEY')
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env.bool('DEBUG', True)
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['127.0.0.1', 'localhost'])
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['127.0.0.1', 'localhost'], '45.131.41.135')
 
 INSTALLED_APPS = [
     'geo_location.apps.GeoLocationConfig',
