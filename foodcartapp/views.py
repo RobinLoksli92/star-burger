@@ -89,7 +89,6 @@ def product_list_api(request):
 @api_view(['POST'])
 @transaction.atomic
 def register_order(request):
-    1/0
     serializer = OrderSerializer(data=request.data)
 
     serializer.is_valid(raise_exception=True)
