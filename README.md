@@ -149,6 +149,10 @@ Parcel будет следить за файлами в каталоге `bundle
 - `ALLOWED_HOSTS` — [см. документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts).
 - `YANDEX_APIKEY` — ключ для API Yandex ([как получить](https://yandex.ru/dev/site/api/concepts/access.html)).
 
+## Ссылка на сайт
+
+[Starburger_site](https://gleb.neverdieone.ru/)
+
 ## Цели проекта
 
 Код написан в учебных целях — это урок в курсе по Python и веб-разработке на сайте [Devman](https://dvmn.org). За основу был взят код проекта [FoodCart](https://github.com/Saibharath79/FoodCart).
