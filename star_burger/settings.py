@@ -9,16 +9,16 @@ env = Env()
 env.read_env()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 YANDEX_APIKEY = env('YANDEX_APIKEY')
 SECRET_KEY = env('SECRET_KEY')
-DEBUG = env.bool('DEBUG', True)
+DEBUG = env.bool('DEBUG', False)
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['127.0.0.1', 'localhost', '45.131.41.135'])
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['127.0.0.1', 'localhost', '45.131.41.135', 'gleb.neverdieone.ru'])
 
 ROLLBAR = {
-    'access_token': env('ROLLBAR_TOKEN'),
+    'access_token': '23b838cdfd4943899cfcfed831d9c541',
     'environment': 'development' if DEBUG else 'production',
     'code_version': '1.0',
     'root': BASE_DIR,
@@ -93,9 +93,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default='sqlite:////{0}'.format(os.path.join(BASE_DIR, 'db.sqlite3'))
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'starburger_db',
+        'USER': 'starburger_db_user',
+        'PASSWORD': 'qwe123',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
 }
 
 AUTH_PASSWORD_VALIDATORS = [
