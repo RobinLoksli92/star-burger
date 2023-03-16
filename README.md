@@ -58,6 +58,10 @@ pip install -r requirements.txt
 ```sh
 SECRET_KEY=django-insecure-0if40nf4nf93n4
 ```
+Также, необходимо получить Rollbar токен, и также положить его в `.env` файл, например:
+```
+ROLLBAR_TOKEN=123456qwerty
+```
 
 Создайте файл базы данных SQLite и отмигрируйте её следующей командой:
 
@@ -150,8 +154,12 @@ Parcel будет следить за файлами в каталоге `bundle
 - `YANDEX_APIKEY` — ключ для API Yandex ([как получить](https://yandex.ru/dev/site/api/concepts/access.html)).
 
 ## Ссылка на сайт
+<<<<<<< HEAD
 
 [Starburger_site](https://gleb.neverdieone.ru/)
+=======
+[StarBurger_site](https://gleb.neverdieone.ru/)
+>>>>>>> 836938b (Added info to README, new requirements. Edit settings.py)
 
 ## Цели проекта
 

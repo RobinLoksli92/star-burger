@@ -18,7 +18,7 @@ DEBUG = env.bool('DEBUG', False)
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['127.0.0.1', 'localhost', '45.131.41.135', 'gleb.neverdieone.ru'])
 
 ROLLBAR = {
-    'access_token': '23b838cdfd4943899cfcfed831d9c541',
+    'access_token': env('ROLLBAR_TOKEN'),
     'environment': 'development' if DEBUG else 'production',
     'code_version': '1.0',
     'root': BASE_DIR,
