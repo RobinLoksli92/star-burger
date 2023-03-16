@@ -154,12 +154,7 @@ Parcel будет следить за файлами в каталоге `bundle
 - `YANDEX_APIKEY` — ключ для API Yandex ([как получить](https://yandex.ru/dev/site/api/concepts/access.html)).
 
 ## Ссылка на сайт
-<<<<<<< HEAD
-
-[Starburger_site](https://gleb.neverdieone.ru/)
-=======
 [StarBurger_site](https://gleb.neverdieone.ru/)
->>>>>>> 836938b (Added info to README, new requirements. Edit settings.py)
 
 ## Цели проекта
 
