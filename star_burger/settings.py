@@ -19,7 +19,7 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['127.0.0.1', 'localhost', '45.131.41.
 
 ROLLBAR = {
     'access_token': env('ROLLBAR_TOKEN'),
-    'environment': 'development' if DEBUG else 'production',
+    'environment': env('ROLBAR_PROFILE', 'default'),
     'code_version': '1.0',
     'root': BASE_DIR,
 }
@@ -92,17 +92,9 @@ WSGI_APPLICATION = 'star_burger.wsgi.application'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'starburger_db',
-        'USER': 'starburger_db_user',
-        'PASSWORD': 'qwe123',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+DATABASES ={ 
+	'default': dj_database_url.parse(env('DB_URL'))
 }
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
