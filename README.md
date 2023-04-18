@@ -59,6 +59,13 @@ pip install -r requirements.txt
 SECRET_KEY=django-insecure-0if40nf4nf93n4
 ```
 
+Также нужно добавить в `.env` остальные переменные окружения:
+- `YANDEX_APIKEY` - ключ для API Yandex ([как получить](https://yandex.ru/dev/site/api/concepts/access.html));
+- `ROLLBAR_TOKEN` - токен для Rollbar ([получить здесь](https://rollbar.com/));
+- `ROLLBAR_PROFILE` (необязательно) - имя профиля Rollbar;
+- `DEBUG` (необязательно) - переключение режима Debug в Django (true/false).
+- `DB_URL` - url с настройками БД PostreSQL вида: "postgres://USER:PASSWORD@HOST:PORT/NAME".
+
 Создайте файл базы данных SQLite и отмигрируйте её следующей командой:
 
 ```sh
