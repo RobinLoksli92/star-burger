@@ -16,12 +16,13 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = env.bool('DEBUG', False)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['127.0.0.1', 'localhost', '45.131.41.135', 'gleb.neverdieone.ru'])
-
-ROLLBAR = {
-    'access_token': env('ROLLBAR_TOKEN'),
-    'environment': env('ROLBAR_PROFILE', 'default'),
-    'code_version': '1.0',
-    'root': BASE_DIR,
+rollbar_enable = env.bool('ROLLBAR_ENABLE', True)
+if rollbar_enable:
+	ROLLBAR = {
+    		'access_token': env('ROLLBAR_TOKEN'),
+    		'environment': env('ROLBAR_PROFILE', 'default'),
+    		'code_version': '1.0',
+    	'root': BASE_DIR,
 }
 
 INSTALLED_APPS = [
